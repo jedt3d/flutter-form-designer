@@ -1,6 +1,6 @@
 # Flutter Form Designer — Draft PRD
 
-Status: Draft v0.1  
+Status: Draft v0.2  
 Product name: `Flutter Form Designer`  
 Category: Developer-first RAD Visual View Composer for Flutter  
 Repository: `Jedt3D/flutter-form-designer`
@@ -41,42 +41,37 @@ The designer owns the View layer / Presentation layer only. Business logic remai
 A useful architecture boundary is:
 
 ```text
-Developer-owned
-────────────────────────────────
-Model
-Repository / Service
-Business Logic
-State Management
-ViewModel / Controller / Presenter
+Developer-owned layer
+  - Model
+  - Repository / Service
+  - Business Logic
+  - State Management
+  - ViewModel / Controller / Presenter
 
-Boundary / Contract
-────────────────────────────────
-ViewModel interface
-Action handlers
-Data fields
-Command/event names
-Validation contract
+Contract boundary
+  - ViewModel interface
+  - Action handlers
+  - Data fields
+  - Command/event names
+  - Validation contract
 
-Designer-owned
-────────────────────────────────
-Screen layout
-Widget hierarchy
-Styles / theme tokens
-Responsive variants
-Design-time sample data
-Bindings to ViewModel fields/actions
-Generated Flutter View code
+Designer-owned layer
+  - Screen layout
+  - Widget hierarchy
+  - Styles / theme tokens
+  - Responsive variants
+  - Design-time sample data
+  - Bindings to ViewModel fields/actions
+  - Generated Flutter View code
 ```
 
 ### 1.4 ABC route decision
 
 Three implementation paths were considered:
 
-| Route | Description | Feasibility | Recommendation |
-|---|---|---:|---|
-| A | Schema-first, generate Dart | High | Good for MVP |
-| B | Dart AST-first, read/write arbitrary Dart UI code | Low to medium | Avoid for MVP |
-| C | Hybrid: designer-owned View + developer-owned logic | Highest | Recommended |
+- Route A: Schema-first, generate Dart. Feasibility is high. Good for MVP.
+- Route B: Dart AST-first, read/write arbitrary Dart UI code. Feasibility is low to medium. Avoid for MVP.
+- Route C: Hybrid designer-owned View plus developer-owned logic. Feasibility is highest. Recommended.
 
 The recommended path is C+: a contract-based hybrid RAD view designer.
 
@@ -257,46 +252,42 @@ MVP should not include:
 
 ## 10. High-Level Architecture
 
+The architecture diagram below avoids vertical pipe or box-drawing characters so it renders consistently in GitHub Markdown across fonts.
+
 ```text
-┌──────────────────────────────────────────────────────────────┐
-│ Flutter Form Designer                                        │
-├──────────────────────────────────────────────────────────────┤
-│ Visual Canvas                                                 │
-│ Widget Tree                                                   │
-│ Object Inspector                                              │
-│ Component Palette                                             │
-│ Binding Designer                                              │
-│ Data Source Tray                                              │
-│ Responsive Preview                                            │
-└──────────────────────────────────────────────────────────────┘
-             │
-             ▼
-┌──────────────────────────────────────────────────────────────┐
-│ Designer Schema                                               │
-│ .ffd.yaml / .ffd.json                                         │
-│ - widget tree                                                 │
-│ - layout properties                                           │
-│ - style tokens                                                │
-│ - responsive variants                                         │
-│ - data sources                                                │
-│ - bindings                                                    │
-│ - preview profiles                                            │
-└──────────────────────────────────────────────────────────────┘
-             │
-       ┌─────┴─────────────────────┐
-       ▼                           ▼
-┌──────────────────────┐   ┌───────────────────────────────────┐
-│ Preview Runtime      │   │ Code Generator                     │
-│ schema -> live view  │   │ schema -> Flutter/Dart code        │
-└──────────────────────┘   └───────────────────────────────────┘
-       │                           │
-       ▼                           ▼
-┌──────────────────────┐   ┌───────────────────────────────────┐
-│ Design-time Preview  │   │ Generated Flutter View Code        │
-└──────────────────────┘   └───────────────────────────────────┘
-                                   │
-                                   ▼
-                         Developer-owned ViewModel / Logic
+Flutter Form Designer
+  UI surfaces
+    - Visual Canvas
+    - Widget Tree
+    - Object Inspector
+    - Component Palette
+    - Binding Designer
+    - Data Source Tray
+    - Responsive Preview
+
+  -> Designer Schema
+       File formats
+         - .ffd.yaml
+         - .ffd.json
+       Stores
+         - widget tree
+         - layout properties
+         - style tokens
+         - responsive variants
+         - data sources
+         - bindings
+         - preview profiles
+
+  -> Preview path
+       Designer Schema
+         -> Preview Runtime
+         -> Design-time Preview
+
+  -> Code generation path
+       Designer Schema
+         -> Code Generator
+         -> Generated Flutter View Code
+         -> Developer-owned ViewModel / Controller / Logic
 ```
 
 ---
@@ -518,10 +509,8 @@ REST preview should run through a design-time proxy:
 
 ```text
 Designer UI
-   ↓
-Design-Time Data Proxy
-   ↓
-REST API / Mock Server / Local Fixture
+  -> Design-Time Data Proxy
+  -> REST API / Mock Server / Local Fixture
 ```
 
 The proxy should support:
