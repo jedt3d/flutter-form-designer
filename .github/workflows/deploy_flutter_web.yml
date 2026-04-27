@@ -30,8 +30,11 @@ jobs:
       - name: Enable web
         run: flutter config --enable-web
 
-      - name: Ensure app folder exists
-        run: test -d app
+      - name: Bootstrap app folder if missing
+        run: |
+          if [ ! -d app ]; then
+            flutter create --platforms=web app
+          fi
 
       - name: Install dependencies
         working-directory: app
