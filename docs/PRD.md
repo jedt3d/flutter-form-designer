@@ -1,6 +1,6 @@
 # Flutter Form Designer — Draft PRD
 
-Status: Draft v0.2  
+Status: Draft v0.3  
 Product name: `Flutter Form Designer`  
 Category: Developer-first RAD Visual View Composer for Flutter  
 Repository: `Jedt3D/flutter-form-designer`
@@ -252,42 +252,47 @@ MVP should not include:
 
 ## 10. High-Level Architecture
 
-The architecture diagram below avoids vertical pipe or box-drawing characters so it renders consistently in GitHub Markdown across fonts.
+The architecture diagram below uses fixed-width ASCII characters only. It should remain aligned in GitHub Markdown when viewed inside the fenced code block.
 
 ```text
-Flutter Form Designer
-  UI surfaces
-    - Visual Canvas
-    - Widget Tree
-    - Object Inspector
-    - Component Palette
-    - Binding Designer
-    - Data Source Tray
-    - Responsive Preview
-
-  -> Designer Schema
-       File formats
-         - .ffd.yaml
-         - .ffd.json
-       Stores
-         - widget tree
-         - layout properties
-         - style tokens
-         - responsive variants
-         - data sources
-         - bindings
-         - preview profiles
-
-  -> Preview path
-       Designer Schema
-         -> Preview Runtime
-         -> Design-time Preview
-
-  -> Code generation path
-       Designer Schema
-         -> Code Generator
-         -> Generated Flutter View Code
-         -> Developer-owned ViewModel / Controller / Logic
++--------------------------------------------------------------+
+| Flutter Form Designer                                        |
++--------------------------------------------------------------+
+| Visual Canvas | Widget Tree | Object Inspector               |
+| Component Palette | Binding Designer | Data Source Tray      |
+| Responsive Preview                                           |
++-----------------------------+--------------------------------+
+                              |
+                              v
++--------------------------------------------------------------+
+| Designer Schema (.ffd.yaml / .ffd.json)                      |
++--------------------------------------------------------------+
+| widget tree | layout properties | style tokens               |
+| responsive variants | data sources | bindings                |
+| preview profiles                                             |
++-----------------------------+--------------------------------+
+                              |
+              +---------------+---------------+
+              |                               |
+              v                               v
++-----------------------------+   +----------------------------+
+| Preview Runtime             |   | Code Generator             |
++-----------------------------+   +----------------------------+
+| schema -> live view         |   | schema -> Flutter/Dart     |
+|                             |   | code                       |
++---------------+-------------+   +-------------+--------------+
+                |                               |
+                v                               v
++-----------------------------+   +----------------------------+
+| Design-time Preview         |   | Generated Flutter View     |
++-----------------------------+   | Code                       |
+                                  +-------------+--------------+
+                                                |
+                                                v
+                                  +----------------------------+
+                                  | Developer-owned ViewModel  |
+                                  | / Controller / Logic       |
+                                  +----------------------------+
 ```
 
 ---
@@ -508,9 +513,9 @@ Required states:
 REST preview should run through a design-time proxy:
 
 ```text
-Designer UI
-  -> Design-Time Data Proxy
-  -> REST API / Mock Server / Local Fixture
++-------------+     +------------------------+     +-------------------------------+
+| Designer UI | --> | Design-Time Data Proxy | --> | REST API / Mock / Fixture     |
++-------------+     +------------------------+     +-------------------------------+
 ```
 
 The proxy should support:
