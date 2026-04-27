@@ -13,6 +13,6 @@ This repository is configured to run Flutter web test/build/deploy when code is 
 
 ## Notes
 
-- The workflow uses `app/` as the Flutter project path and bootstraps `app/` with `flutter create --platforms=web app` if missing.
+- The workflow expects your Flutter app in `app/`.
 - It builds with `--base-href /flutter-form-designer/`.
 - If repository name changes, update the base href in workflow.
